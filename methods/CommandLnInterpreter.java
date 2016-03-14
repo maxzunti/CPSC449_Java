@@ -12,7 +12,7 @@ import java.lang.reflect.*;
 
 /*****
 TODO: print correct error message
-
+TODO: find out about Truncations
 *****/
 public class CommandLnInterpreter{
   private FunctionsFromFile filesFunctions;

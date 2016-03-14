@@ -9,11 +9,13 @@ public class MainLoop{
     CommandLnInterpreter comLn = new CommandLnInterpreter(args);
     FunctionsFromFile functions = comLn.getFunctionFromFile();
 
-    ////Testing executeMethod DOES NOT WORK
+    ////*******Testing executeMethod DOES NOT WORK
     //Integer test1 = new Integer(1);
+    //int test1 = 30;
     //Integer test2 = new Integer(2);
-    //Object[] array = new Object[]{test1,test2};
-    //functions.executeMethod("add", array);
+    //Object[] array = {test1};
+    //System.out.println(test1.getClass());
+    //functions.executeMethod("inc", array);
 
     System.out.println ( "This is where the main loop will be" );
   }

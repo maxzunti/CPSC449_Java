@@ -23,16 +23,39 @@ public class FunctionsFromFile{
         e.printStackTrace();
     }
   }
-  /********Does not work************/
+  /********Does not work yet************/
   //Problem: cant get correct class types for paraType
   public void executeMethod(String methodName, Object[] parameters){
     try{
+/*
+      Method[] declaredMethods = funClass.getDeclaredMethods();
+          for (Method dmethod : declaredMethods) {
+              Class<?>[] test = dmethod.getParameterTypes();
+              for (Class t : test)
+                System.out.print(t + "\n");
+
+          }
+*/
         Class<?>[] paraType = new Class<?>[parameters.length];
         for (int i = 0;i < parameters.length; i++ ) {
-          System.out.println(parameters[i]);
-          System.out.println(parameters[i].getClass());
-          System.out.println(parameters[i].getClass().getName());
-          paraType[i] = parameters[i].getClass();
+          //paraType[i] = parameters[i].getClass();
+          //System.out.println("abc" + paraType[i]);
+          /*if (parameters[i] instanceof int)
+              paraType[i] = Integer.TYPE;
+          else if (parameters[i] instanceof float)
+              paraType[i] = Float.TYPE;
+          else if (parameters[i] instanceof boolean)
+              paraType[i] = Boolean.TYPE;
+          else if (parameters[i] instanceof byte)
+              paraType[i] = Byte.TYPE;
+          else if (parameters[i] instanceof char)
+              paraType[i] = Char.TYPE;
+          else if (parameters[i] instanceof short)
+              paraType[i] = Short.TYPE;
+          else if (parameters[i] instanceof long)
+              paraType[i] = Long.TYPE;
+          else if (parameters[i] instanceof double)
+              paraType[i] = Double.TYPE;*/
         }
         Method oneMethod = funClass.getMethod(methodName, paraType);
 
