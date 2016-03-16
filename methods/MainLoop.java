@@ -1,5 +1,8 @@
 package methods;
 
+// Imports
+import java.util.Scanner;
+
 public class MainLoop{
 
   public static void main(String [ ] args)
@@ -16,6 +19,13 @@ public class MainLoop{
     //Object[] array = {test1};
     //System.out.println(test1.getClass());
     //functions.executeMethod("inc", array);
+    String expr;
+    Scanner reader = new Scanner(System.in);
+    do{
+      System.out.print("> ");
+      expr = reader.next();
+      // parseTree.doEverything(expr);
+    } while(!expr.equals("q") && !expr.equals("quit"));
 
     System.out.println ( "This is where the main loop will be" );
   }
