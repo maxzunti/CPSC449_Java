@@ -21,10 +21,13 @@ public class MainLoop{
     //functions.executeMethod("inc", array);
     String expr;
     Scanner reader = new Scanner(System.in);
+    ParseTree newTree = new ParseTree("");
     do{
       System.out.print("> ");
-      expr = reader.next();
+      expr = reader.nextLine();
+      expr = expr.replaceAll(" +", " ");
       // parseTree.doEverything(expr);
+      ParseNode newNode = newTree.genTree(expr, 0);
     } while(!expr.equals("q") && !expr.equals("quit"));
 
     System.out.println ( "This is where the main loop will be" );
