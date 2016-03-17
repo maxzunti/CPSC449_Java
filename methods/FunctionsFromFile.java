@@ -16,12 +16,16 @@ public class FunctionsFromFile{
       funClass.cast(funClassObj);
     }catch (NoSuchMethodException e) {
             e.printStackTrace();
+            System.exit(0);
     }catch (InstantiationException e) {
         e.printStackTrace();
+        System.exit(0);
     }catch (IllegalAccessException e) {
         e.printStackTrace();
+        System.exit(0);
     }catch (InvocationTargetException e) {
         e.printStackTrace();
+        System.exit(0);
     }
   }
 

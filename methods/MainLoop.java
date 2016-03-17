@@ -14,19 +14,15 @@ public class MainLoop{
     CommandLnInterpreter comLn = new CommandLnInterpreter(args);
     FunctionsFromFile functions = comLn.getFunctionFromFile();
 
-    ////*******Testing executeMethod DOES NOT WORK
-    //Integer test1 = new Integer(1);
-    //int test1 = 30;
-    //Integer test2 = new Integer(2);
-    //Object[] array = {test1};
-    //System.out.println(test1.getClass());
-    //functions.executeMethod("inc", array);
+
     String expr = "(add 1 (add 3 4) )))";
     ParseTree tree = new ParseTree(expr);
     int test = tree.checkBrackets(expr);
     //ParseNode node = new ParseNode("hi",0,0,tType.VALUE);
     //int test2 = node.returnType(expr);
     //System.out.println(test);
+
+    comLn.printHelpText();
     Scanner reader = new Scanner(System.in);
     do{
       System.out.print("> ");
@@ -35,7 +31,8 @@ public class MainLoop{
       // parseTree.doEverything(expr);
     } while(!expr.equals("q") && !expr.equals("quit"));
 
-    System.out.println ( "This is where the main loop will be" );
+    System.out.println ( "bye" );
+    System.exit(0);
   }
 
 }

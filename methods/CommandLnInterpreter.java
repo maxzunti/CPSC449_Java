@@ -67,19 +67,25 @@ public class CommandLnInterpreter{
     }
   }
 
+  //Given a jarName and class, return a FunctionsFromFile object
   public FunctionsFromFile getClassFromJar(String jarName, String className){
     try{
+      //prep for extracting class
       File f = new File(jarName);
       URL[] urls = new URL[1];
       urls[0] = f.toURI().toURL();
       URLClassLoader cl = URLClassLoader.newInstance(urls);
+      //get class from jar
       Class<?> c = Class.forName(className, true, cl);
+      //instaniate functions from file
       FunctionsFromFile functionClass = new FunctionsFromFile(c);
       return functionClass;
       }catch(MalformedURLException e){
         e.printStackTrace();
+        System.exit(0);
       }catch(ClassNotFoundException e){
         e.printStackTrace();
+        System.exit(0);
       }
       System.out.println("This should never happen");
       return null;
@@ -146,6 +152,16 @@ public class CommandLnInterpreter{
     System.out.println ("  -v --verbose: Print out detailed errors, warning, and tracking.");
     System.out.println ("  -h -? --help: Print out a detailed help message.");
     System.out.println ("Single-char qualifiers may be grouped; long qualifiers may be truncated to unique prefixes and are not case sensitive.");
+  }
+
+  public void printHelpText(){
+    System.out.println("q           : Quit the program.");
+    System.out.println("v           : Toggle verbose mode (stack traces).");
+    System.out.println("f           : List all known functions.");
+    System.out.println("?           : Print this helpful text.");
+    System.out.println("<expression>: Evaluate the expression.");
+    System.out.println("Expressions can be integers, floats, strings (surrounded in double quotes) or function");
+    System.out.println("calls of the form '(identifier {expression}*)'.");
   }
 
 }
