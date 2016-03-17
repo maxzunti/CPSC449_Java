@@ -17,7 +17,6 @@ public class ParseTree {
         head = new ParseNode(elements[0], offset+1, elements.length - 1, ParseNode.tType.IDENTIFIER);
         for (int i = 1; i < elements.length; i++) {
           int tempOffset = expr.indexOf(elements[i]);
-          System.out.println("elements[" + i + "] = " + elements[i] + "\nlength = " + elements[i].length());
           head.addChild(genTree(elements[i], offset + tempOffset));
         }
       } else {
@@ -26,7 +25,6 @@ public class ParseTree {
       }
     
     } else { // Value
-      System.out.println("adding val " + expr);
       head = new ParseNode(expr, offset, 0, ParseNode.tType.VALUE);
     }
 
