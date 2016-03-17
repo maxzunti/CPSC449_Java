@@ -2,6 +2,7 @@ package methods;
 
 import java.lang.Integer;
 import java.lang.reflect.*;
+import java.util.*;
 
 public class FunctionsFromFile{
   private Class<?> funClass;
@@ -23,55 +24,55 @@ public class FunctionsFromFile{
         e.printStackTrace();
     }
   }
-  /********Does not work yet************/
-  //Problem: cant get correct class types for paraType
-  public void executeMethod(String methodName, Object[] parameters){
-    try{
-/*
-      Method[] declaredMethods = funClass.getDeclaredMethods();
-          for (Method dmethod : declaredMethods) {
-              Class<?>[] test = dmethod.getParameterTypes();
-              for (Class t : test)
-                System.out.print(t + "\n");
 
-          }
-*/
-        Class<?>[] paraType = new Class<?>[parameters.length];
-        for (int i = 0;i < parameters.length; i++ ) {
-          //paraType[i] = parameters[i].getClass();
-          //System.out.println("abc" + paraType[i]);
-          /*if (parameters[i] instanceof int)
-              paraType[i] = Integer.TYPE;
-          else if (parameters[i] instanceof float)
-              paraType[i] = Float.TYPE;
-          else if (parameters[i] instanceof boolean)
-              paraType[i] = Boolean.TYPE;
-          else if (parameters[i] instanceof byte)
-              paraType[i] = Byte.TYPE;
-          else if (parameters[i] instanceof char)
-              paraType[i] = Char.TYPE;
-          else if (parameters[i] instanceof short)
-              paraType[i] = Short.TYPE;
-          else if (parameters[i] instanceof long)
-              paraType[i] = Long.TYPE;
-          else if (parameters[i] instanceof double)
-              paraType[i] = Double.TYPE;*/
+  public Method getFuncMethod(String methodName, ParseNode.rType[] paraRTypes)
+  {
+    if ((paraRTypes.length == 1) && (paraRTypes[0] == ParseNode.rType.VOID))
+      return null;
+    Method[] methodWithName = getMethodFromName(methodName);
+    for (Method eachMethod : methodWithName) {
+        Class<?>[] paraOfMethod = eachMethod.getParameterTypes();
+        if (checkIfSignatureMatch(paraOfMethod, paraRTypes))
+          return eachMethod;
+    }
+      return null;
+  }
+
+  public Boolean checkIfSignatureMatch(Class<?>[] methodSig, ParseNode.rType[] paraRTypes){
+    Integer anInteger = 1;
+    Float aFlaot = new Float(2.0);
+    String aString = "test";
+    for (int i = 0; i < paraRTypes.length; i++ ){
+      if (paraRTypes[i] == ParseNode.rType.INT){
+        if (!(methodSig[i] == Integer.TYPE) && !(methodSig[i] == anInteger.getClass()) ){
+          return false;
         }
-        Method oneMethod = funClass.getMethod(methodName, paraType);
+      }
+      else if (paraRTypes[i] == ParseNode.rType.FLOAT){
+        if (!(methodSig[i] == Float.TYPE) && !(methodSig[i] == aFlaot.getClass()) ){
+          return false;
+        }
+      }
+      else if (paraRTypes[i] == ParseNode.rType.STRING){
+        if (!(methodSig[i] == aString.getClass()) ){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
-        System.out.println("Method is: " + oneMethod);
-        System.out.println("DOES METHOD WORK " + oneMethod.invoke(funClassObj, parameters));
-    }catch (IllegalAccessException e) {
-          e.printStackTrace();
-    }catch (NoSuchMethodException e) {
-        e.printStackTrace();
-    }catch (InvocationTargetException e) {
-        e.printStackTrace();
-    }/*catch (ClassNotFoundException e) {
-        e.printStackTrace();
-    }*//*catch (NoSuchFieldException e) {
-        e.printStackTrace();
-    }*/
+  public Method[] getMethodFromName(String name)
+  {
+    Method[] methods = funClass.getDeclaredMethods();
+    List<Method> methodsToReturn = new ArrayList<Method>();
+    for (Method method : methods)
+    {
+      if (method.getName() == name)
+        methodsToReturn.add(method);
+    }
+    Method[] a = methodsToReturn.toArray(new Method[methodsToReturn.size()]);
+    return a;
   }
 
 }
