@@ -2,7 +2,8 @@ package methods;
 
 // Imports
 import java.util.Scanner;
-import java.lang.reflect.*;
+//import methods.ParseNode.rType;
+//import methods.ParseNode.tType;
 
 public class MainLoop{
 
@@ -13,30 +14,26 @@ public class MainLoop{
     CommandLnInterpreter comLn = new CommandLnInterpreter(args);
     FunctionsFromFile functions = comLn.getFunctionFromFile();
 
-
-
-    /*******Testing get Method
-    ParseNode.rType[] test = new ParseNode.rType[2];
-    test[0] = ParseNode.rType.FLOAT;
-    test[1] = ParseNode.rType.FLOAT;
-
-    Method testMethod = functions.getFuncMethod("testsds", test);
-    System.out.println(testMethod.getName());
-    for (Class<?> para : testMethod.getParameterTypes())
-      System.out.println(para);
-      */
-
-
-    String expr;
+    ////*******Testing executeMethod DOES NOT WORK
+    //Integer test1 = new Integer(1);
+    //int test1 = 30;
+    //Integer test2 = new Integer(2);
+    //Object[] array = {test1};
+    //System.out.println(test1.getClass());
+    //functions.executeMethod("inc", array);
+    String expr = "(add 1 (add 3 4) )))";
+    ParseTree tree = new ParseTree(expr);
+    int test = tree.checkBrackets(expr);
+    //ParseNode node = new ParseNode("hi",0,0,tType.VALUE);
+    //int test2 = node.returnType(expr);
+    //System.out.println(test);
     Scanner reader = new Scanner(System.in);
-    ParseTree newTree = new ParseTree("");
     do{
       System.out.print("> ");
-      expr = reader.nextLine();
-      expr = expr.replaceAll(" +", " ");
+      expr = reader.next();
+      //rType test2 = node.returnType(expr);
       // parseTree.doEverything(expr);
-      ParseNode newNode = newTree.genTree(expr, 0);
-    } while(!expr.equalsIgnoreCase("q") && !expr.equalsIgnoreCase("quit"));
+    } while(!expr.equals("q") && !expr.equals("quit"));
 
     System.out.println ( "This is where the main loop will be" );
   }
