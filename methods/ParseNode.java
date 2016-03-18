@@ -91,7 +91,7 @@ public class ParseNode {
       } catch (ParseException e) {
         throw e;
       }
-    }      
+    }
   }
 
 
@@ -122,8 +122,11 @@ public class ParseNode {
         tokenType = rType.STRING;
       } else {
         tokenType = rType.INVALID;
-      throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
-
+        String Str = "";
+        for (int j = 0; j < expr.length(); j++)
+          Str += "-";
+        Str += "^";
+      throw new ParseException("Encountered end-of-input while reading string beginning at offset " + tokenPos + " at offset " + expr.length() + "\n" + expr + "\n" + Str, tokenPos);
       }
     } else if (number == true && !(token.indexOf('.') == -1) && (!(token.indexOf('.') == 0) && !(token.indexOf('.') == token.length()-1))) {
       tokenType = rType.FLOAT;
