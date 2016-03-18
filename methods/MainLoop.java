@@ -2,6 +2,7 @@ package methods;
 
 // Imports
 import java.util.Scanner;
+import java.text.ParseException;
 //import methods.ParseNode.rType;
 //import methods.ParseNode.tType;
 import java.lang.reflect.*;
@@ -16,6 +17,7 @@ public class MainLoop{
 	  // will execute the correct command based off the arguments from the command line
     CommandLnInterpreter comLn = new CommandLnInterpreter(args);
     FunctionsFromFile functions = comLn.getFunctionFromFile();
+    ParseTree tree = new ParseTree(new ParseNode("", "", 0, 0, ParseNode.tType.WRONGO));
 
     //Testing the getReturnRType method --------------
     /*Method testMethod = functions.getFuncMethod("add", new ParseNode.rType[] {ParseNode.rType.INT, ParseNode.rType.INT});
@@ -30,11 +32,16 @@ public class MainLoop{
     for (Class<?> para : testMethod.getParameterTypes())
       System.out.println(para);*/
 
-    String expr = "(add 1 (add 3 4) )))";
-    ParseTree tree = new ParseTree(new ParseNode("", "", 0, 0, ParseNode.tType.WRONGO));
-    int test = tree.checkBrackets(expr);
+  //  ParseTree tree;
+  //  String expr = "(add 1 (add 3 4) )))";
+  /*  try {
+    } catch (ParseException e) {
+      System.out.println("Critical initialization error");
+    }*/
+    //int test = tree.checkBrackets(expr);
     //ParseNode node = new ParseNode("hi",0,0,tType.VALUE);
     //int test2 = node.returnType(expr);
+    String expr;
     System.out.println("Begin loop");
 
     comLn.printHelpText();
@@ -42,7 +49,9 @@ public class MainLoop{
     do{
       System.out.print("> ");
       expr = reader.nextLine();
-      if (expr.equals("v")){
+      if (expr.equals("")) {
+        continue;
+      } else if (expr.equals("v")){
         if (verbose == true){
           System.out.println("Verbose off.");
           verbose = false;
@@ -61,8 +70,20 @@ public class MainLoop{
       else if (expr.equals("q"))
         continue;
       else{
-        tree = new ParseTree(tree.genTree(expr, expr, 0));
-        ParseNode head = tree.getHead();
+        if (tree.checkBrackets(expr) == -1){
+        try {
+          // Generate a new parse tree from an expression
+          tree = new ParseTree(tree.genTree(expr, expr, 0));
+          ParseNode head = tree.getHead();
+
+          // Traverse the tree, assigning types to values and functions
+          tree.resolveTypes(head, functions);
+        } catch (ParseException e) {
+          System.out.println(e.getMessage());
+          if (verbose)
+            e.printStackTrace();
+          }
+        } 
       }
       // head.finishTree();
       //head.assignMethod(functions);

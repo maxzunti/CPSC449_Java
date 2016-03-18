@@ -1,5 +1,7 @@
 package methods;
 
+import java.text.ParseException;
+
 public class ParseTree {
   //ParseNode tNode;
   //ParseNode.tType tType;
@@ -9,8 +11,10 @@ public class ParseTree {
     treeHead = newHead;
   }
 
+  // Generate a new ParseTree from an expression and return its head
   public ParseNode genTree(String expr, String fullExpr, int offset) {
-    ParseNode head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
+    ParseNode head;
+      head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
     if (expr.charAt(0) == '(') {   // Expression
       if (expr.charAt(expr.length()-1) == ')') { // Brackets match
         String newExpr = expr.substring(1,expr.length()-1);
@@ -24,7 +28,7 @@ public class ParseTree {
         // We should have done this already
         System.out.println("Error: mismatched brackets");
       }
-    
+
     } else { // Value
       head = new ParseNode(expr, fullExpr, offset, 0, ParseNode.tType.VALUE);
     }
@@ -34,28 +38,35 @@ public class ParseTree {
 
   // Once we've tokenized and assigned values, attempt to recursively
   // resolve identifiers (and child types) to functions
-/*  public assignFunctions(ParseNode head) { // throws ParseException
-    if (head.getTType() == ParseNode.IDENTIFIER) {
+  public void resolveTypes(ParseNode head, FunctionsFromFile fHelper) throws ParseException {
     ParseNode [] children = head.getChildren();
     for (int i = 0; i < children.length; i++) {
-      // try
-      assignFunctions(children[i]);
-  }*/
-  
+      try {
+        resolveTypes(children[i], fHelper);
+      } catch (ParseException e) {
+        throw e;
+      }
+    }
+    try {
+      head.assignReturnType(fHelper);
+    } catch (ParseException e) {
+      throw e;
+    }
+  }
   // used for debugging - recursively highlights token locations
   void printTokens(String expr, ParseNode head) {
-    ParseNode currNode = head; 
+    ParseNode currNode = head;
     String test = head.getToken();
     System.out.println("***************");
     System.out.println("For token " + test + ":");
     System.out.println(expr);
     System.out.println(head.showToken());
-    
+
     ParseNode [] children = currNode.getChildren();
     for (int i = 0; i < children.length; i++) {
       printTokens(expr, children[i]);
     }
-    
+
   }
 
   // For a string expr, return an array of tokens and (bracketed expressions)
@@ -95,7 +106,7 @@ public class ParseTree {
         if (expr.charAt(i) == ')') {
           bDepth--;
           if (bDepth == 0) {
-            tokens[j] = expr.substring(tindex, i+1).trim(); 
+            tokens[j] = expr.substring(tindex, i+1).trim();
             j++;
           }
         }
@@ -141,7 +152,7 @@ public class ParseTree {
     }
     return j;
   }
- 
+
 
   int checkBrackets(String expr) {
   // if good return -1 (or something), if bad, return token number of mismatch
@@ -185,7 +196,13 @@ public class ParseTree {
           num--;
         }
         index = expr3.length() - expr2.length() - 1;
-        System.out.println("no matching right bracket at index: " + index + " in expression: " + expr3);
+        System.out.println("No matching right bracket at offset " + index);
+        System.out.println(expr3);
+        String rbErr = "";
+        for (int j = 0; j < index; j++)
+          rbErr += "-";
+        rbErr += "^";
+        System.out.println(rbErr);
     } else {
       num = rightNum - leftNum;
       while (num > 0){
@@ -194,7 +211,13 @@ public class ParseTree {
         num--;
       }
       index = right;
-      System.out.println("no matching left bracket at index: " + index + " in expression: " + expr3);
+      System.out.println("No matching left bracket at offset " + index);
+      System.out.println(expr3);
+      String lbErr = "";
+      for (int j = 0; j < index; j++)
+        lbErr += "-";
+      lbErr += "^";
+      System.out.println(lbErr);
     }
   }
 
