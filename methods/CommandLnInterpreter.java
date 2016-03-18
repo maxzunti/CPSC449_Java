@@ -85,12 +85,12 @@ public class CommandLnInterpreter{
       filesFunctions = getClassFromJar(commandLnArgs[0], commandLnArgs[1]);
     }
     else if (commandLnArgs[0].substring(0, 2).equals("--")){
-      System.err.println("Unrecognized qualifier: --<longQualifier>.");
+      System.err.println("Unrecognized qualifier: --" + commandLnArgs[0].substring(2, commandLnArgs[0].length()) + ".");
       System.err.println(getErrSynopsis());
       System.exit(-1);
     }
     else if (commandLnArgs[0].substring(0, 1).equals("-")){
-      System.err.println("Unrecognized qualifier '<letter>' in '-<allLettersInTheQualPhraseOnTheComandLine>'.");
+      System.err.println("Unrecognized qualifier '" + commandLnArgs[0].charAt(1) + "' in '" + commandLnArgs[0] + "'.");
       System.err.println(getErrSynopsis());
       System.exit(-1);
     }
@@ -100,9 +100,15 @@ public class CommandLnInterpreter{
       System.err.println(getErrSynopsis());
       System.exit(-2);
     }
+    else if (commandLnArgs.length == 1){
+
+      System.err.println("There is only one argument and no qualifiers");
+      System.exit(0);
+    }
     //if none of the above the print error message and quit
     else{
         System.out.println("Bad Args / Not capturing a fatal errors");
+
       }
   }
 
@@ -113,7 +119,7 @@ public class CommandLnInterpreter{
       File f = new File(jarName);
       //Checks if the jar file exists
       if(!(f.exists() && !f.isDirectory())){
-        System.err.println("Could not load jar file: <fileName>");
+        System.err.println("Could not load jar file: <" + jarName + ">");
         System.exit(-5);
       }
       URL[] urls = new URL[1];
@@ -128,7 +134,7 @@ public class CommandLnInterpreter{
         System.out.println("MalformedURLException");
         System.exit(0);
       }catch(ClassNotFoundException e){
-        System.err.println("Could not find class: <className>");
+        System.err.println("Could not find class: <" + className + ">");
         System.exit(-6);
       }
       System.out.println("This should never happen");
@@ -190,7 +196,7 @@ public class CommandLnInterpreter{
     System.out.println ("Single-char qualifiers may be grouped; long qualifiers may be truncated to unique prefixes and are not case sensitive.");
   }
   public String getErrSynopsis (){
-    return "Synopsis:\n  methods\n  methods { -h | -? | --help }+\n methods {-v --verbose}* <jar-file> [<class-name>]\nArguments:\n <jar-file>:   The .jar file that contains the class to load (see next line).\n  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"Commands\"] \nQualifiers:\n -v --verbose: Print out detailed errors, warning, and tracking.\n -h -? --help: Print out a detailed help message.\nSingle-char qualifiers may be grouped; long qualifiers may be truncated to unique prefixes and are not case sensitive.\n";
+    return "Synopsis:\n  methods\n  methods { -h | -? | --help }+\n methods {-v --verbose}* <jar-file> [<class-name>]\nArguments:\n <jar-file>:   The .jar file that contains the class to load (see next line).\n  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"Commands\"] \nQualifiers:\n -v --verbose: Print out detailed errors, warning, and tracking.\n -h -? --help: Print out a detailed help message.\nSingle-char qualifiers may be grouped; long qualifiers may be truncated to unique prefixes and are not case sensitive.";
   }
 
   public void printHelpText(){
