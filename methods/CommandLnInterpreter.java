@@ -10,10 +10,6 @@ import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.lang.reflect.*;
 
-/*****
-TODO: print correct error message
-TODO: find out about Truncations
-*****/
 public class CommandLnInterpreter{
   private FunctionsFromFile filesFunctions;
 
@@ -47,10 +43,19 @@ public class CommandLnInterpreter{
       System.out.println ("methods in <class-name>, and executes them, printing the result to sysout.");
       System.exit(0);
     }
+    //when there is help and more args, then error message
     else if(validHelpArg(commandLnArgs[0]) && commandLnArgs.length > 1){
       System.err.println("Qualifier --help (-h, -?) should not appear with any comand-line arguments.");
       System.err.println(getErrSynopsis());
       System.exit(-4);
+    }
+    else if (validVerboseArg(commandLnArgs[0]) && commandLnArgs.length == 2 ){
+      System.err.println("No Class");
+      System.exit(0);
+    }
+    else if (validVerbHelpArg(commandLnArgs[0]) && commandLnArgs.length == 2 ){
+      System.err.println("No Class");
+      System.exit(0);
     }
     //If there is a verbrose argument first followed by a valid jar and class name, then continue
     else if (validVerboseArg(commandLnArgs[0]) && commandLnArgs.length == 3){
@@ -77,6 +82,10 @@ public class CommandLnInterpreter{
     }
     //If there is a valid jar and class name, then continue
     else if (commandLnArgs.length == 2){
+      if (commandLnArgs[0].length() <= 4){
+        System.out.println("bad args");
+        System.exit(0);
+      }
       if (!commandLnArgs[0].substring(commandLnArgs[0].length() - 4).equals(".jar")){
         System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
         System.err.println(getErrSynopsis());
@@ -84,11 +93,13 @@ public class CommandLnInterpreter{
       }
       filesFunctions = getClassFromJar(commandLnArgs[0], commandLnArgs[1]);
     }
+    //Give errors to unrecognized qualifiers that start with '--'
     else if (commandLnArgs[0].substring(0, 2).equals("--")){
       System.err.println("Unrecognized qualifier: --" + commandLnArgs[0].substring(2, commandLnArgs[0].length()) + ".");
       System.err.println(getErrSynopsis());
       System.exit(-1);
     }
+    //Give errors to unrecognized qualifiers that start with '-'
     else if (commandLnArgs[0].substring(0, 1).equals("-")){
       System.err.println("Unrecognized qualifier '" + commandLnArgs[0].charAt(1) + "' in '" + commandLnArgs[0] + "'.");
       System.err.println(getErrSynopsis());
