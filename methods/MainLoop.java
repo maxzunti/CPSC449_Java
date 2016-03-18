@@ -65,6 +65,7 @@ public class MainLoop{
       else if (expr.equals("q"))
         continue;
       else{
+        if (tree.checkBrackets(expr) == -1){
         try {
           // Generate a new parse tree from an expression
           tree = new ParseTree(tree.genTree(expr, expr, 0));
@@ -76,6 +77,9 @@ public class MainLoop{
           System.out.println(e.getMessage());
           if (verbose)
             e.printStackTrace();
+          }
+        } else {
+          System.out.println("Bracket error");
         }
       }
       // head.finishTree();
