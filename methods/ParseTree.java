@@ -1,10 +1,9 @@
 package methods;
 
+import java.lang.reflect.*;
 import java.text.ParseException;
 
 public class ParseTree {
-  //ParseNode tNode;
-  //ParseNode.tType tType;
   ParseNode treeHead;
 
   public ParseTree(ParseNode newHead) {
@@ -37,7 +36,7 @@ public class ParseTree {
   }
 
   // Once we've tokenized and assigned values, attempt to recursively
-  // resolve identifiers (and child types) to functions
+  // resolve identifiers to functions and assign types to values
   public void resolveTypes(ParseNode head, FunctionsFromFile fHelper) throws ParseException {
     ParseNode [] children = head.getChildren();
     for (int i = 0; i < children.length; i++) {
@@ -53,20 +52,38 @@ public class ParseTree {
       throw e;
     }
   }
-  // used for debugging - recursively highlights token locations
-  void printTokens(String expr, ParseNode head) {
-    ParseNode currNode = head;
-    String test = head.getToken();
-    System.out.println("***************");
-    System.out.println("For token " + test + ":");
-    System.out.println(expr);
-    System.out.println(head.showToken());
 
-    ParseNode [] children = currNode.getChildren();
+  // After correctly verifying tokens, types, and assigning identifers to methods,
+  // compute the final result of the expression and return it as a string
+  // (the heads' rType can tell us how to treat this) 
+  public Object computeTree(ParseNode head, FunctionsFromFile fHelper) {
+    Object result = 0;
+    ParseNode [] children = head.getChildren();
     for (int i = 0; i < children.length; i++) {
-      printTokens(expr, children[i]);
+      computeTree(children[i], fHelper);
     }
-
+    // Only reach here after all head's children have been fully solved
+    if (head.getTType() == ParseNode.tType.IDENTIFIER) {
+      // nodeFunction is non-null
+      Method nodeFunction = head.getMethod();
+      Object [] args = new Object [children.length];
+      for (int i = 0; i < children.length; i++) {
+        args[i] = children[i].getValue();
+      }
+      try {
+        result = nodeFunction.invoke(fHelper.getFunClassObj(), args);
+      } catch (IllegalAccessException iae) {
+        System.out.println("Illegal access exception");
+        iae.printStackTrace();
+      } catch (InvocationTargetException ite) {
+        System.out.println("Invocation target exception");
+        ite.printStackTrace();
+      }
+    head.setValue(result);
+    } else {
+      result = head.getValue();
+    }
+    return result;
   }
 
   // For a string expr, return an array of tokens and (bracketed expressions)
