@@ -39,7 +39,7 @@ public class ParseNode {
   // Used in type checking
   rType retType;
 
-  public ParseNode(String tok, String expr, int pos, int numChildren, tType tokType) { // throws ParseException { TODO
+  public ParseNode(String tok, String expr, int pos, int numChildren, tType tokType) {
     token = tok;
     this.expr = expr;
     this.tokType = tokType;
@@ -47,7 +47,7 @@ public class ParseNode {
     tokenPos = pos;
     this.numChildren = numChildren;
     children = new ParseNode [numChildren];
-    if (tokType == tType.VALUE) {
+/*    if (tokType == tType.VALUE) {
       try {
         retType = returnType(token);
       } catch (ParseException e) {
@@ -59,13 +59,14 @@ public class ParseNode {
       //System.out.println("set " + token + " to type " + retType.toString());
     } else {
       retType = rType.UNSET;
-    }
+    }*/
+    retType = rType.UNSET;
     nodeFunction = null;
   }
 
   // Assign rTypes to all unset nodes (i.e. all IDENTIFIER nodes with
   // specific return types) based on the children nodes and their types
-  public void assignMethod(FunctionsFromFile funcHelper) { // TODO throws ParseException TODO
+  public void assignReturnType(FunctionsFromFile funcHelper) throws ParseException {
     if (tokType == tType.IDENTIFIER) {
       rType [] childTypes = new rType [numChildren];
       for (int i = 0; i < numChildren; i++) {
@@ -85,9 +86,14 @@ public class ParseNode {
       } else { // nodeFunction is actually assigned
         // retType = Method.getMethodReturnType TODO STEVEN/PHILIP
       }
-    }
-      
-
+    } else {  // tokType == tType.VALUE
+      // Assign type to value
+      try {
+        retType = returnType(token);
+      } catch (ParseException e) {
+        throw e;
+      }
+    }      
   }
 
 
@@ -115,21 +121,16 @@ public class ParseNode {
 
     if(token.charAt(0) == '\"' || token.charAt(token.length()-1) == '\"'){
       if(token.charAt(0) == '\"' && token.charAt(token.length()-1) == '\"'){
-        System.out.println("String");
         tokenType = rType.STRING;
       } else {
-        System.out.println("Invalid String");
         tokenType = rType.INVALID;
         throw new ParseException("\"" + token + "\"" + " cannot be resolved to a type", tokenPos);
       }
     } else if (number == true && !(token.indexOf('.') == -1) && (!(token.indexOf('.') == 0) && !(token.indexOf('.') == token.length()-1))) {
-      System.out.println("Float");
       tokenType = rType.FLOAT;
     } else if (intnum == true) {
-      System.out.println("Integer");
       tokenType = rType.INT;
     } else {
-      System.out.println("Invalid Token");
       tokenType = rType.INVALID;
       throw new ParseException("\"" + token + "\"" + "cannot be resolved to a type", tokenPos);
     }

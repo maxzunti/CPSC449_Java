@@ -2,6 +2,7 @@ package methods;
 
 // Imports
 import java.util.Scanner;
+import java.text.ParseException;
 //import methods.ParseNode.rType;
 //import methods.ParseNode.tType;
 
@@ -15,13 +16,19 @@ public class MainLoop{
 	  // will execute the correct command based off the arguments from the command line
     CommandLnInterpreter comLn = new CommandLnInterpreter(args);
     FunctionsFromFile functions = comLn.getFunctionFromFile();
-
-
-    String expr = "(add 1 (add 3 4) )))";
     ParseTree tree = new ParseTree(new ParseNode("", "", 0, 0, ParseNode.tType.WRONGO));
-    int test = tree.checkBrackets(expr);
+
+
+  //  ParseTree tree;
+  //  String expr = "(add 1 (add 3 4) )))";
+  /*  try {
+    } catch (ParseException e) {
+      System.out.println("Critical initialization error");
+    }*/
+    //int test = tree.checkBrackets(expr);
     //ParseNode node = new ParseNode("hi",0,0,tType.VALUE);
     //int test2 = node.returnType(expr);
+    String expr;
     System.out.println("Begin loop");
 
     comLn.printHelpText();

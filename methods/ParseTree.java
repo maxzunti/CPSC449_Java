@@ -1,5 +1,7 @@
 package methods;
 
+import java.text.ParseException;
+
 public class ParseTree {
   //ParseNode tNode;
   //ParseNode.tType tType;
@@ -10,7 +12,8 @@ public class ParseTree {
   }
 
   public ParseNode genTree(String expr, String fullExpr, int offset) {
-    ParseNode head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
+    ParseNode head;
+      head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
     if (expr.charAt(0) == '(') {   // Expression
       if (expr.charAt(expr.length()-1) == ')') { // Brackets match
         String newExpr = expr.substring(1,expr.length()-1);
