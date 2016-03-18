@@ -63,6 +63,9 @@ public class ParseNode {
         childTypes[i] = children[i].getRType();
       }
       nodeFunction = funcHelper.getFuncMethod(token, childTypes);
+      // XXX
+      //nodeFunction = funcHelper.getFuncMethod("add", new rType [] { rType.INT});
+      //System.out.println("nodeFunction name = " + nodeFunction.getName());
       if (nodeFunction == null) {
         String errMsg = "Matching function for '(" + token;
         for (int i = 0; i < childTypes.length; i++) {
@@ -118,6 +121,7 @@ public class ParseNode {
     if(token.charAt(0) == '\"' || token.charAt(token.length()-1) == '\"'){
       if(token.charAt(0) == '\"' && token.charAt(token.length()-1) == '\"'){
         tokenType = rType.STRING;
+        this.token = token.substring(1, token.length()-1);
       } else {
         tokenType = rType.INVALID;
         String Str = "";
@@ -164,7 +168,6 @@ public class ParseNode {
   public int getTokenPos() { return tokenPos; }
   public rType getRType() { return retType; }
   public tType getTType() { return tokType; }
-
   public void setValue(Object newVal) { value = newVal; }
   public Object getValue() { return value; }
   public Method getMethod() { return nodeFunction; }
