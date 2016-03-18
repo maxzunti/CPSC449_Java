@@ -8,6 +8,8 @@ public class FunctionsFromFile{
   private Class<?> funClass;
   private Object funClassObj;
 
+
+
   //Contructor for class
   //creates an Object of the class given and stores it as a field also stores the class as a field
   public FunctionsFromFile(Class cl){
@@ -29,6 +31,11 @@ public class FunctionsFromFile{
         e.printStackTrace();
         System.exit(0);
     }
+  }
+
+  public Object getFunClassObj()
+  {
+    return funClassObj;
   }
 
   public ParseNode.rType getReturnRType(Method method){
