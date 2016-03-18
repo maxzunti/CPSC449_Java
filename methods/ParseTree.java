@@ -13,8 +13,8 @@ public class ParseTree {
   // Generate a new ParseTree from an expression and return its head
   public ParseNode genTree(String expr, String fullExpr, int offset) {
     ParseNode head;
-      head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
-    if (expr.charAt(0) == '(') {   // Expression
+    head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
+    if (expr.charAt(0) == '(' && expr.length() > 2) {   // Expression
       if (expr.charAt(expr.length()-1) == ')') { // Brackets match
         String newExpr = expr.substring(1,expr.length()-1);
         String [] elements = subTokenize(newExpr);
@@ -27,7 +27,6 @@ public class ParseTree {
         // We should have done this already
         System.out.println("Error: mismatched brackets");
       }
-
     } else { // Value
       head = new ParseNode(expr, fullExpr, offset, 0, ParseNode.tType.VALUE);
     }
