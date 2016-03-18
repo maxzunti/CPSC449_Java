@@ -44,7 +44,9 @@ public class MainLoop{
     do{
       System.out.print("> ");
       expr = reader.nextLine();
-      if (expr.equals("v")){
+      if (expr.equals("")) {
+        continue;
+      } else if (expr.equals("v")){
         if (verbose == true){
           System.out.println("Verbose off.");
           verbose = false;
@@ -64,9 +66,19 @@ public class MainLoop{
         continue;
       else{
         if (tree.checkBrackets(expr) == -1){
-        tree = new ParseTree(tree.genTree(expr, expr, 0));
-        ParseNode head = tree.getHead();
-        }
+        try {
+          // Generate a new parse tree from an expression
+          tree = new ParseTree(tree.genTree(expr, expr, 0));
+          ParseNode head = tree.getHead();
+
+          // Traverse the tree, assigning types to values and functions
+          tree.resolveTypes(head, functions);
+        } catch (ParseException e) {
+          System.out.println(e.getMessage());
+          if (verbose)
+            e.printStackTrace();
+          }
+        } 
       }
       // head.finishTree();
       //head.assignMethod(functions);

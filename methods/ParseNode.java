@@ -75,14 +75,12 @@ public class ParseNode {
       nodeFunction = funcHelper.getFuncMethod(token, childTypes);
       if (nodeFunction == null) {
         // This section is unsafe until we check (BEFORE) that the entered types are valid
-        System.out.print("Matching function for '(" + token);
+        String errMsg = "Matching function for '(" + token;
         for (int i = 0; i < childTypes.length; i++) {
-          //System.out.print(" " + childTypes[i].toString());
-          System.out.print(" MAKE ME SAFE!");
+          errMsg += " " + childTypes[i].toString();
         }
-        System.out.println(")' not found at offset" + tokenPos);
-        System.out.println(showToken());
-        // TODO: throw exception
+        errMsg += ")' not found at offset " + tokenPos + "\n" + showToken();
+        throw new ParseException(errMsg, tokenPos);
       } else { // nodeFunction is actually assigned
         // retType = Method.getMethodReturnType TODO STEVEN/PHILIP
       }
@@ -124,7 +122,8 @@ public class ParseNode {
         tokenType = rType.STRING;
       } else {
         tokenType = rType.INVALID;
-        throw new ParseException("\"" + token + "\"" + " cannot be resolved to a type", tokenPos);
+      throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
+
       }
     } else if (number == true && !(token.indexOf('.') == -1) && (!(token.indexOf('.') == 0) && !(token.indexOf('.') == token.length()-1))) {
       tokenType = rType.FLOAT;
@@ -132,7 +131,7 @@ public class ParseNode {
       tokenType = rType.INT;
     } else {
       tokenType = rType.INVALID;
-      throw new ParseException("\"" + token + "\"" + "cannot be resolved to a type", tokenPos);
+      throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
     }
 
     return tokenType;

@@ -11,6 +11,7 @@ public class ParseTree {
     treeHead = newHead;
   }
 
+  // Generate a new ParseTree from an expression and return its head
   public ParseNode genTree(String expr, String fullExpr, int offset) {
     ParseNode head;
       head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
@@ -37,14 +38,21 @@ public class ParseTree {
 
   // Once we've tokenized and assigned values, attempt to recursively
   // resolve identifiers (and child types) to functions
-/*  public assignFunctions(ParseNode head) { // throws ParseException
-    if (head.getTType() == ParseNode.IDENTIFIER) {
+  public void resolveTypes(ParseNode head, FunctionsFromFile fHelper) throws ParseException {
     ParseNode [] children = head.getChildren();
     for (int i = 0; i < children.length; i++) {
-      // try
-      assignFunctions(children[i]);
-  }*/
-
+      try {
+        resolveTypes(children[i], fHelper);
+      } catch (ParseException e) {
+        throw e;
+      }
+    }
+    try {
+      head.assignReturnType(fHelper);
+    } catch (ParseException e) {
+      throw e;
+    }
+  }
   // used for debugging - recursively highlights token locations
   void printTokens(String expr, ParseNode head) {
     ParseNode currNode = head;
