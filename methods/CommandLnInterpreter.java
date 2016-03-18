@@ -41,22 +41,35 @@ public class CommandLnInterpreter{
       System.out.println ("methods in <class-name>, and executes them, printing the result to sysout.");
       System.exit(0);
     }
+    else if(validHelpArg(commandLnArgs[0]) && commandLnArgs.length > 1){
+      System.out.println("Qualifier --help (-h, -?) should not appear with any comand-line arguments.");
+      System.exit(-4);
+    }
     //If there is a verbrose argument first followed by a valid jar and class name, then continue
-    // TODO: check Valid jar and class
     else if (validVerboseArg(commandLnArgs[0]) && commandLnArgs.length == 3){
+      if (!commandLnArgs[1].substring(commandLnArgs[1].length() - 4).equals(".jar")){
+        System.out.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.exit(-3);
+      }
       filesFunctions = getClassFromJar(commandLnArgs[1], commandLnArgs[2]);
-
     }
     //If there is a verbroseHelper argument first followed by a valid jar and class name, then continue
     else if (validVerbHelpArg(commandLnArgs[0]) && commandLnArgs.length == 3){
       printSynopsis();
+      if (!commandLnArgs[1].substring(commandLnArgs[1].length() - 4).equals(".jar")){
+        System.out.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.exit(-3);
+      }
       System.out.println ("\nThis program interprets commands of the format '(<method> {arg}*)' on the command line, finds corresponding");
       System.out.println ("methods in <class-name>, and executes them, printing the result to sysout.");
       filesFunctions = getClassFromJar(commandLnArgs[1], commandLnArgs[2]);
-
     }
     //If there is a valid jar and class name, then continue
     else if (commandLnArgs.length == 2){
+      if (!commandLnArgs[0].substring(commandLnArgs[0].length() - 4).equals(".jar")){
+        System.out.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.exit(-3);
+      }
       filesFunctions = getClassFromJar(commandLnArgs[0], commandLnArgs[1]);
     }
     //if none of the above the print error message and quit
@@ -72,6 +85,11 @@ public class CommandLnInterpreter{
     try{
       //prep for extracting class
       File f = new File(jarName);
+      //Checks if the jar file exists
+      if(!(f.exists() && !f.isDirectory())){
+        System.out.println("Could not load jar file: <fileName>");
+        System.exit(-5);
+      }
       URL[] urls = new URL[1];
       urls[0] = f.toURI().toURL();
       URLClassLoader cl = URLClassLoader.newInstance(urls);
@@ -81,11 +99,11 @@ public class CommandLnInterpreter{
       FunctionsFromFile functionClass = new FunctionsFromFile(c);
       return functionClass;
       }catch(MalformedURLException e){
-        e.printStackTrace();
+        System.out.println("MalformedURLException");
         System.exit(0);
       }catch(ClassNotFoundException e){
-        e.printStackTrace();
-        System.exit(0);
+        System.out.println("Could not find class: <className>");
+        System.exit(-6);
       }
       System.out.println("This should never happen");
       return null;

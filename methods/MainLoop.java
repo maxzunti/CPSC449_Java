@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 public class MainLoop{
 
+  public static boolean verbose = false;
+
   public static void main(String [ ] args)
   {
 	  // initialize the commandLnInterpreter
@@ -27,8 +29,26 @@ public class MainLoop{
     do{
       System.out.print("> ");
       expr = reader.nextLine();
-      tree = new ParseTree(tree.genTree(expr, expr, 0));
-      ParseNode head = tree.getHead();
+      if (expr.equals("v")){
+        if (verbose == true){
+          System.out.println("Verbose off.");
+          verbose = false;
+        }
+        else {
+          System.out.println("Verbose on.");
+          verbose = true;
+        }
+      }
+      else if (expr.equals("f")){
+        functions.printFunctionsFromFile();
+      }
+      else if (expr.equals("?")){
+        comLn.printHelpText();
+      }
+      else{
+        tree = new ParseTree(tree.genTree(expr, expr, 0));
+        ParseNode head = tree.getHead();
+      }
       // head.finishTree();
       //head.assignMethod(functions);
       //rType test2 = node.returnType(expr);
