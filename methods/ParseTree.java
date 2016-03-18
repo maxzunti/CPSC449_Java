@@ -55,7 +55,7 @@ public class ParseTree {
 
   // After correctly verifying tokens, types, and assigning identifers to methods,
   // compute the final result of the expression and return it as a string
-  // (the heads' rType can tell us how to treat this) 
+  // (the heads' rType can tell us how to treat this)
   public Object computeTree(ParseNode head, FunctionsFromFile fHelper) {
     Object result = 0;
     ParseNode [] children = head.getChildren();
@@ -191,7 +191,7 @@ public class ParseTree {
       leftNum++;
     }
   }
-
+expr = expr3;
   //find number of right brackets
   while (!(right == -1)){
     right = expr.indexOf(')');
