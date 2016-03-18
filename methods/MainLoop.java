@@ -70,8 +70,9 @@ public class MainLoop{
       else if (expr.equals("q"))
         continue;
       else{
-        if (tree.checkBrackets(expr) == -1){
-        try {
+        try{
+          if (tree.checkBrackets(expr) == -1){
+
           // Generate a new parse tree from an expression
           tree = new ParseTree(tree.genTree(expr, expr, 0));
           ParseNode head = tree.getHead();
@@ -80,20 +81,21 @@ public class MainLoop{
           tree.resolveTypes(head, functions);
           // Compute the final result of the (now verified) tree
           System.out.println(tree.computeTree(head, functions).toString());
+        }
         } catch (ParseException e) {
           System.out.println(e.getMessage());
           if (verbose)
             e.printStackTrace();
-          }
         }
       }
+      
       // head.finishTree();
       //head.assignMethod(functions);
       //rType test2 = node.returnType(expr);
       // parseTree.doEverything(expr);
     } while(!expr.equals("q"));
 
-    System.out.println ( "bye." );
+    System.out.println ( "bye" );
     System.exit(0);
   }
 

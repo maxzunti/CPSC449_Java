@@ -140,7 +140,7 @@ public class ParseNode {
     } else {
       tokenType = rType.INVALID;
       throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
-    }
+      }
     }
     return tokenType;
   }

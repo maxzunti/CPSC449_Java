@@ -170,7 +170,7 @@ public class ParseTree {
   }
 
 
-  int checkBrackets(String expr) {
+  int checkBrackets(String expr) throws ParseException {
   // if good return -1 (or something), if bad, return token number of mismatch
   String expr2 = expr;
   String expr3 = expr;
@@ -213,13 +213,11 @@ public class ParseTree {
           num--;
         }
         index = expr3.length() - expr2.length() - 1;
-        System.out.println("No matching right bracket at offset " + index);
-        System.out.println(expr3);
         String rbErr = "";
         for (int j = 0; j < index; j++)
           rbErr += "-";
         rbErr += "^";
-        System.out.println(rbErr);
+        throw new ParseException("No matching right bracket at offset " + index + "\n" + expr3 + "\n" + rbErr, index);
     } else {
       num = rightNum - leftNum;
       while (num > 0){
@@ -228,13 +226,11 @@ public class ParseTree {
         num--;
       }
       index = right;
-      System.out.println("No matching left bracket at offset " + index);
-      System.out.println(expr3);
       String lbErr = "";
       for (int j = 0; j < index; j++)
         lbErr += "-";
       lbErr += "^";
-      System.out.println(lbErr);
+      throw new ParseException("No matching left bracket at offset " + index + "\n" + expr3 + "\n" + lbErr, index);
     }
   }
 
