@@ -88,7 +88,7 @@ public class FunctionsFromFile{
     List<Method> methodsToReturn = new ArrayList<Method>();
     for (Method method : methods)
     {
-      if (method.getName() == name)
+      if (method.getName().equals(name))
         methodsToReturn.add(method);
     }
     Method[] a = methodsToReturn.toArray(new Method[methodsToReturn.size()]);
