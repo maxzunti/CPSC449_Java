@@ -136,7 +136,7 @@ public class ParseNode {
         Str += "^";
       throw new ParseException("Encountered end-of-input while reading string beginning at offset " + tokenPos + " at offset " + expr.length() + "\n" + expr + "\n" + Str, tokenPos);
       }
-    } else if (number == true && !(token.indexOf('.') == -1) && (!(token.indexOf('.') == 0) && !(token.indexOf('.') == token.length()-1))) {
+    } else if (number == true && !(token.indexOf('.') == -1) && !(token.indexOf('.') == 0)) {
       tokenType = rType.FLOAT;
     } else if (intnum == true) {
       tokenType = rType.INT;
