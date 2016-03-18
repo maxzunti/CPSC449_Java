@@ -66,9 +66,7 @@ public class MainLoop{
         if (tree.checkBrackets(expr) == -1){
         tree = new ParseTree(tree.genTree(expr, expr, 0));
         ParseNode head = tree.getHead();
-      } else {
-        System.out.println("bracket error");
-      }
+        }
       }
       // head.finishTree();
       //head.assignMethod(functions);
