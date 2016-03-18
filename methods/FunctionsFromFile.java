@@ -8,8 +8,6 @@ public class FunctionsFromFile{
   private Class<?> funClass;
   private Object funClassObj;
 
-
-
   //Contructor for class
   //creates an Object of the class given and stores it as a field also stores the class as a field
   public FunctionsFromFile(Class cl){
@@ -68,6 +66,8 @@ public class FunctionsFromFile{
   //check that the rtype signature matches the real sigature
   //checks both primitve and class type
   public Boolean checkIfSignatureMatch(Class<?>[] methodSig, ParseNode.rType[] paraRTypes){
+    if (methodSig.length != paraRTypes.length)
+      return false;
     for (int i = 0; i < paraRTypes.length; i++ ){
       if (paraRTypes[i] == ParseNode.rType.INT){
         if (!(methodSig[i] == Integer.TYPE) && !(methodSig[i] == Integer.class) ){

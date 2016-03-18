@@ -60,6 +60,7 @@ public class CommandLnInterpreter{
         System.exit(-3);
       }
       filesFunctions = getClassFromJar(commandLnArgs[1], commandLnArgs[2]);
+      MainLoop.verbose = true;
     }
     //If there is a verbroseHelper argument first followed by a valid jar and class name, then continue
     else if (validVerbHelpArg(commandLnArgs[0]) && commandLnArgs.length == 3){
@@ -72,6 +73,7 @@ public class CommandLnInterpreter{
       System.out.println ("\nThis program interprets commands of the format '(<method> {arg}*)' on the command line, finds corresponding");
       System.out.println ("methods in <class-name>, and executes them, printing the result to sysout.");
       filesFunctions = getClassFromJar(commandLnArgs[1], commandLnArgs[2]);
+      MainLoop.verbose = true;
     }
     //If there is a valid jar and class name, then continue
     else if (commandLnArgs.length == 2){
@@ -82,6 +84,16 @@ public class CommandLnInterpreter{
       }
       filesFunctions = getClassFromJar(commandLnArgs[0], commandLnArgs[1]);
     }
+    else if (commandLnArgs[0].substring(0, 2).equals("--")){
+      System.err.println("Unrecognized qualifier: --<longQualifier>.");
+      System.err.println(getErrSynopsis());
+      System.exit(-1);
+    }
+    else if (commandLnArgs[0].substring(0, 1).equals("-")){
+      System.err.println("Unrecognized qualifier '<letter>' in '-<allLettersInTheQualPhraseOnTheComandLine>'.");
+      System.err.println(getErrSynopsis());
+      System.exit(-1);
+    }
       //checks the number of commandLnArg is within range with no qualifiers
     else if(commandLnArgs.length > 2){
       System.err.println("This program takes at most two command line arguments.");
@@ -90,20 +102,8 @@ public class CommandLnInterpreter{
     }
     //if none of the above the print error message and quit
     else{
-      if (commandLnArgs[0].substring(0, 2).equals("--")){
-        System.err.println("Unrecognized qualifier: --<longQualifier>.");
-        System.err.println(getErrSynopsis());
-        System.exit(-1);
-      }
-      else if (commandLnArgs[0].substring(0, 1).equals("-")){
-        System.err.println("Unrecognized qualifier '<letter>' in '-<allLettersInTheQualPhraseOnTheComandLine>'.");
-        System.err.println(getErrSynopsis());
-        System.exit(-1);
-      }
-      else{
         System.out.println("Bad Args / Not capturing a fatal errors");
       }
-    }
   }
 
   //Given a jarName and class, return a FunctionsFromFile object
@@ -154,7 +154,7 @@ public class CommandLnInterpreter{
   private Boolean validVerboseArg(String helpStr){
     if (helpStr.equals("-v")){
       return true;
-    }else if (helpStr.equals("--verbose")){
+    }else if (helpStr.toLowerCase().startsWith("--v")){
       return true;
     }else{
       return false;
@@ -167,21 +167,13 @@ public class CommandLnInterpreter{
       return true;
     }else if (helpStr.equals("-?")){
       return true;
-    }else if (helpStr.equals("--help")){
+    }else if (helpStr.toLowerCase().startsWith("--h")){
       return true;
     }else{
       return false;
     }
   }
 
-/*
-  public String doubleMinusTrunc(String orignalStr){
-    if (orignalStr.substring(0,2) == "--" ){
-      orignalStr.toLowerCase();
-      return
-    }
-
-  }*/
 /********Print Methods****************************/
   //print Synopsis
   public void printSynopsis (){
