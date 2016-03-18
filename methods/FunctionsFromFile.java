@@ -31,6 +31,18 @@ public class FunctionsFromFile{
     }
   }
 
+  public ParseNode.rType getReturnRType(Method method){
+    Class<?> returnType = method.getReturnType();
+    if (returnType == Integer.class || returnType == Integer.TYPE)
+      return ParseNode.rType.INT;
+    else if (returnType == Float.class || returnType == Float.TYPE)
+      return ParseNode.rType.FLOAT;
+    else if (returnType == String.class)
+      return ParseNode.rType.STRING;
+    else
+      return ParseNode.rType.VOID;
+  }
+
   //Given a method name and a list of rtypes, return the defined method
   //if there are no method that meet the specification, the return null
   public Method getFuncMethod(String methodName, ParseNode.rType[] paraRTypes)

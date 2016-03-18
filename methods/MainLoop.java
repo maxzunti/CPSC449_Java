@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.text.ParseException;
 //import methods.ParseNode.rType;
 //import methods.ParseNode.tType;
+import java.lang.reflect.*;
 
 public class MainLoop{
 
@@ -18,6 +19,13 @@ public class MainLoop{
     FunctionsFromFile functions = comLn.getFunctionFromFile();
     ParseTree tree = new ParseTree(new ParseNode("", "", 0, 0, ParseNode.tType.WRONGO));
 
+    //Testing the getReturnRType method --------------
+    /*Method testMethod = functions.getFuncMethod("add", new ParseNode.rType[] {ParseNode.rType.INT, ParseNode.rType.INT});
+    ParseNode.rType rt = functions.getReturnRType(testMethod);
+    if (rt == ParseNode.rType.INT)
+      System.out.println("GOT INT");
+    else
+      System.out.println("didnt get INT");*/
 
   //  ParseTree tree;
   //  String expr = "(add 1 (add 3 4) )))";
@@ -52,6 +60,8 @@ public class MainLoop{
       else if (expr.equals("?")){
         comLn.printHelpText();
       }
+      else if (expr.equals("q"))
+        continue;
       else{
         tree = new ParseTree(tree.genTree(expr, expr, 0));
         ParseNode head = tree.getHead();
@@ -60,7 +70,7 @@ public class MainLoop{
       //head.assignMethod(functions);
       //rType test2 = node.returnType(expr);
       // parseTree.doEverything(expr);
-    } while(!expr.equals("q") && !expr.equals("quit"));
+    } while(!expr.equals("q"));
 
     System.out.println ( "bye" );
     System.exit(0);
