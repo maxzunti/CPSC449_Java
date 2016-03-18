@@ -63,9 +63,6 @@ public class ParseNode {
         childTypes[i] = children[i].getRType();
       }
       nodeFunction = funcHelper.getFuncMethod(token, childTypes);
-      // XXX
-      //nodeFunction = funcHelper.getFuncMethod("add", new rType [] { rType.INT});
-      //System.out.println("nodeFunction name = " + nodeFunction.getName());
       if (nodeFunction == null) {
         String errMsg = "Matching function for '(" + token;
         for (int i = 0; i < childTypes.length; i++) {
@@ -144,7 +141,7 @@ public class ParseNode {
       tokenType = rType.INVALID;
       throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
     }
-}
+    }
     return tokenType;
   }
 

@@ -93,7 +93,7 @@ public class MainLoop{
       // parseTree.doEverything(expr);
     } while(!expr.equals("q"));
 
-    System.out.println ( "bye" );
+    System.out.println ( "bye." );
     System.exit(0);
   }
 
