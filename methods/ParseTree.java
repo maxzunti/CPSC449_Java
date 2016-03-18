@@ -3,21 +3,22 @@ package methods;
 public class ParseTree {
   //ParseNode tNode;
   //ParseNode.tType tType;
+  ParseNode treeHead;
 
-  public ParseTree(String expr) {
-
+  public ParseTree(ParseNode newHead) {
+    treeHead = newHead;
   }
 
-  public ParseNode genTree(String expr, int offset) {
-    ParseNode head = new ParseNode("garbage", 0, 0, ParseNode.tType.WRONGO);
+  public ParseNode genTree(String expr, String fullExpr, int offset) {
+    ParseNode head = new ParseNode("garbage", "garbage", 0, 0, ParseNode.tType.WRONGO);
     if (expr.charAt(0) == '(') {   // Expression
       if (expr.charAt(expr.length()-1) == ')') { // Brackets match
         String newExpr = expr.substring(1,expr.length()-1);
         String [] elements = subTokenize(newExpr);
-        head = new ParseNode(elements[0], offset+1, elements.length - 1, ParseNode.tType.IDENTIFIER);
+        head = new ParseNode(elements[0], fullExpr, offset+1, elements.length - 1, ParseNode.tType.IDENTIFIER);
         for (int i = 1; i < elements.length; i++) {
           int tempOffset = expr.indexOf(elements[i]);
-          head.addChild(genTree(elements[i], offset + tempOffset));
+          head.addChild(genTree(elements[i], fullExpr, offset + tempOffset));
         }
       } else {
         // We should have done this already
@@ -25,11 +26,21 @@ public class ParseTree {
       }
     
     } else { // Value
-      head = new ParseNode(expr, offset, 0, ParseNode.tType.VALUE);
+      head = new ParseNode(expr, fullExpr, offset, 0, ParseNode.tType.VALUE);
     }
 
     return head;
   }
+
+  // Once we've tokenized and assigned values, attempt to recursively
+  // resolve identifiers (and child types) to functions
+/*  public assignFunctions(ParseNode head) { // throws ParseException
+    if (head.getTType() == ParseNode.IDENTIFIER) {
+    ParseNode [] children = head.getChildren();
+    for (int i = 0; i < children.length; i++) {
+      // try
+      assignFunctions(children[i]);
+  }*/
   
   // used for debugging - recursively highlights token locations
   void printTokens(String expr, ParseNode head) {
@@ -65,6 +76,10 @@ public class ParseTree {
           bDepth++;
           tindex = i;
         } else if (expr.charAt(i) != ' ') {
+            if (i == expr.length()-1) {
+              tokens[j] = expr.substring(i, i+1).trim();
+              j++;
+            }
           inToken = true;
           tindex = i;
         }
@@ -103,6 +118,8 @@ public class ParseTree {
           bDepth++;
           tindex = i;
         } else if (expr.charAt(i) != ' ') {
+            if (i == expr.length()-1) // Single-character end token
+              j++;
           inToken = true;
           tindex = i;
         }
@@ -183,4 +200,6 @@ public class ParseTree {
 
     return index;
   }
+
+  public ParseNode getHead() { return treeHead; }
 }

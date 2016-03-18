@@ -1,5 +1,8 @@
 package methods;
 
+import java.lang.reflect.*;
+import java.text.ParseException;
+
 public class ParseNode {
 
   // Token type
@@ -9,26 +12,88 @@ public class ParseNode {
 
   // Return types
   public enum rType {
-    INT, FLOAT, STRING, VOID, UNSET
+    INT, FLOAT, STRING, VOID, UNSET, INVALID;
+
+    @Override
+    public String toString() {
+      switch(this) {
+        case INT: return "int";
+        case FLOAT: return "float";
+        case STRING: return "string";
+        default: throw new IllegalArgumentException();
+      }
+    }
   }
 
   String token;       // Store token string
+  String expr;        // Full expression
   tType tokType;  // Identifier or value?
   int tokenPos;       // Track these for error messages
   int tokenLength;
   int numChildren;    // Number of children
+  Method nodeFunction; // Only set for IDENTIFIER (function) nodes
 
   ParseNode [] children;
 
-  //ArrayList<ParseNode> children = new ArrayList();
-
-  // Set this AFTER this initial construction of the tree
+// Set this AFTER this initial construction of the tree
   // Used in type checking
   rType retType;
 
+  public ParseNode(String tok, String expr, int pos, int numChildren, tType tokType) { // throws ParseException { TODO
+    token = tok;
+    this.expr = expr;
+    this.tokType = tokType;
+    tokenLength = tok.length();
+    tokenPos = pos;
+    this.numChildren = numChildren;
+    children = new ParseNode [numChildren];
+    if (tokType == tType.VALUE) {
+      try {
+        retType = returnType(token);
+      } catch (ParseException e) {
+        System.out.println("ERROR: The token \"" + token + "\" does not resolve to a type");
+        System.out.println(showToken());
+        // e.printStackTrace(); IFF VERBOSE
+        // throw e;
+      }
+      //System.out.println("set " + token + " to type " + retType.toString());
+    } else {
+      retType = rType.UNSET;
+    }
+    nodeFunction = null;
+  }
+
+  // Assign rTypes to all unset nodes (i.e. all IDENTIFIER nodes with
+  // specific return types) based on the children nodes and their types
+  public void assignMethod(FunctionsFromFile funcHelper) { // TODO throws ParseException TODO
+    if (tokType == tType.IDENTIFIER) {
+      rType [] childTypes = new rType [numChildren];
+      for (int i = 0; i < numChildren; i++) {
+        childTypes[i] = children[i].getRType();
+      }
+      nodeFunction = funcHelper.getFuncMethod(token, childTypes);
+      if (nodeFunction == null) {
+        // This section is unsafe until we check (BEFORE) that the entered types are valid
+        System.out.print("Matching function for '(" + token);
+        for (int i = 0; i < childTypes.length; i++) {
+          //System.out.print(" " + childTypes[i].toString());
+          System.out.print(" MAKE ME SAFE!");
+        }
+        System.out.println(")' not found at offset" + tokenPos);
+        System.out.println(showToken());
+        // TODO: throw exception
+      } else { // nodeFunction is actually assigned
+        // retType = Method.getMethodReturnType TODO STEVEN/PHILIP
+      }
+    }
+      
+
+  }
+
+
   //Returns an rType of INT, STRING, or FLOAT. based upon the token.
   //if the token is invalid then it will return UNSET
-  private rType returnType(String token){
+  private rType returnType(String token) throws ParseException {
 
     rType tokenType = rType.UNSET;
     int dot = 0;
@@ -54,7 +119,8 @@ public class ParseNode {
         tokenType = rType.STRING;
       } else {
         System.out.println("Invalid String");
-        tokenType = rType.UNSET;
+        tokenType = rType.INVALID;
+        throw new ParseException("\"" + token + "\"" + " cannot be resolved to a type", tokenPos);
       }
     } else if (number == true && !(token.indexOf('.') == -1) && (!(token.indexOf('.') == 0) && !(token.indexOf('.') == token.length()-1))) {
       System.out.println("Float");
@@ -64,24 +130,11 @@ public class ParseNode {
       tokenType = rType.INT;
     } else {
       System.out.println("Invalid Token");
-      tokenType = rType.UNSET;
+      tokenType = rType.INVALID;
+      throw new ParseException("\"" + token + "\"" + "cannot be resolved to a type", tokenPos);
     }
 
     return tokenType;
-
-  }
-
-  public ParseNode(String tok, int pos, int numChildren, tType tokType) {
-    token = tok;
-    this.tokType = tokType;
-    tokenLength = tok.length();
-    tokenPos = pos;
-    this.numChildren = numChildren;
-    children = new ParseNode [numChildren];
-    // if tokType == VALUE
-    //    determine rType
-    // else
-    //    retType = UNSET
   }
 
   // Adds a child node to the next free entry in the "children" array
@@ -101,12 +154,14 @@ public class ParseNode {
     for (int i = 0; i < tokenPos; i++)
       tStr += "-";
     tStr += "^";
-    return tStr;
+    return (expr + "\n" + tStr);
   }
 
 
   public ParseNode [] getChildren() { return children; }
   public String getToken() { return token; }
   public int getTokenPos() { return tokenPos; }
+  public rType getRType() { return retType; }
+  public tType getTType() { return tokType; }
 
 }

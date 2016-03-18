@@ -16,17 +16,21 @@ public class MainLoop{
 
 
     String expr = "(add 1 (add 3 4) )))";
-    ParseTree tree = new ParseTree(expr);
+    ParseTree tree = new ParseTree(new ParseNode("", "", 0, 0, ParseNode.tType.WRONGO));
     int test = tree.checkBrackets(expr);
     //ParseNode node = new ParseNode("hi",0,0,tType.VALUE);
     //int test2 = node.returnType(expr);
-    //System.out.println(test);
+    System.out.println("Begin loop");
 
     comLn.printHelpText();
     Scanner reader = new Scanner(System.in);
     do{
       System.out.print("> ");
-      expr = reader.next();
+      expr = reader.nextLine();
+      tree = new ParseTree(tree.genTree(expr, expr, 0));
+      ParseNode head = tree.getHead();
+      // head.finishTree();
+      //head.assignMethod(functions);
       //rType test2 = node.returnType(expr);
       // parseTree.doEverything(expr);
     } while(!expr.equals("q") && !expr.equals("quit"));
