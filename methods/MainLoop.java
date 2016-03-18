@@ -78,6 +78,8 @@ public class MainLoop{
 
           // Traverse the tree, assigning types to values and functions
           tree.resolveTypes(head, functions);
+          // Compute the final result of the (now verified) tree
+          System.out.println(tree.computeTree(head, functions).toString());
         } catch (ParseException e) {
           System.out.println(e.getMessage());
           if (verbose)

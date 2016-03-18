@@ -35,6 +35,9 @@ public class ParseNode {
 
   ParseNode [] children;
 
+  // Contains the resolved (and type-correct) value of the node
+  Object value;
+
 // Set this AFTER this initial construction of the tree
   // Used in type checking
   rType retType;
@@ -47,20 +50,7 @@ public class ParseNode {
     tokenPos = pos;
     this.numChildren = numChildren;
     children = new ParseNode [numChildren];
-/*    if (tokType == tType.VALUE) {
-      try {
-        retType = returnType(token);
-      } catch (ParseException e) {
-        System.out.println("ERROR: The token \"" + token + "\" does not resolve to a type");
-        System.out.println(showToken());
-        // e.printStackTrace(); IFF VERBOSE
-        // throw e;
-      }
-      //System.out.println("set " + token + " to type " + retType.toString());
-    } else {
-      retType = rType.UNSET;
-    }*/
-    retType = rType.UNSET;
+
     nodeFunction = null;
   }
 
@@ -73,8 +63,10 @@ public class ParseNode {
         childTypes[i] = children[i].getRType();
       }
       nodeFunction = funcHelper.getFuncMethod(token, childTypes);
+      // XXX
+      //nodeFunction = funcHelper.getFuncMethod("add", new rType [] { rType.INT});
+      //System.out.println("nodeFunction name = " + nodeFunction.getName());
       if (nodeFunction == null) {
-        // This section is unsafe until we check (BEFORE) that the entered types are valid
         String errMsg = "Matching function for '(" + token;
         for (int i = 0; i < childTypes.length; i++) {
           errMsg += " " + childTypes[i].toString();
@@ -82,16 +74,25 @@ public class ParseNode {
         errMsg += ")' not found at offset " + tokenPos + "\n" + showToken();
         throw new ParseException(errMsg, tokenPos);
       } else { // nodeFunction is actually assigned
-        // retType = Method.getMethodReturnType TODO STEVEN/PHILIP
+        retType = funcHelper.getReturnRType(nodeFunction);
       }
     } else {  // tokType == tType.VALUE
       // Assign type to value
       try {
         retType = returnType(token);
+        if (retType == rType.INT) {
+          value = Integer.parseInt(token);
+        } else if (retType == rType.FLOAT) {
+          value = Float.parseFloat(token);
+        } else if (retType == rType.STRING) {
+          value = token;
+        } else {
+          throw new ParseException("Critical error: ambiguous return type", tokenPos);
+        }
       } catch (ParseException e) {
         throw e;
       }
-    }      
+    }
   }
 
 
@@ -120,10 +121,14 @@ public class ParseNode {
     if(token.charAt(0) == '\"' || token.charAt(token.length()-1) == '\"'){
       if(token.charAt(0) == '\"' && token.charAt(token.length()-1) == '\"'){
         tokenType = rType.STRING;
+        this.token = token.substring(1, token.length()-1);
       } else {
         tokenType = rType.INVALID;
-      throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
-
+        String Str = "";
+        for (int j = 0; j < expr.length(); j++)
+          Str += "-";
+        Str += "^";
+      throw new ParseException("Encountered end-of-input while reading string beginning at offset " + tokenPos + " at offset " + expr.length() + "\n" + expr + "\n" + Str, tokenPos);
       }
     } else if (number == true && !(token.indexOf('.') == -1) && (!(token.indexOf('.') == 0) && !(token.indexOf('.') == token.length()-1))) {
       tokenType = rType.FLOAT;
@@ -163,5 +168,7 @@ public class ParseNode {
   public int getTokenPos() { return tokenPos; }
   public rType getRType() { return retType; }
   public tType getTType() { return tokType; }
-
+  public void setValue(Object newVal) { value = newVal; }
+  public Object getValue() { return value; }
+  public Method getMethod() { return nodeFunction; }
 }
