@@ -26,7 +26,7 @@ public class MainLoop{
       System.out.println("GOT INT");
     else
       System.out.println("didnt get INT");*//*
-    ParseNode.rType[] testrType = new ParseNode.rType[] {ParseNode.rType.INT, ParseNode.rType.INT};
+    ParseNode.rType[] testrType = new ParseNode.rType[] {ParseNode.rType.INT};
     Method testMethod = functions.getFuncMethod("add", testrType);
     System.out.println(testMethod.getName());
     for (Class<?> para : testMethod.getParameterTypes())
@@ -83,7 +83,7 @@ public class MainLoop{
           if (verbose)
             e.printStackTrace();
           }
-        } 
+        }
       }
       // head.finishTree();
       //head.assignMethod(functions);
