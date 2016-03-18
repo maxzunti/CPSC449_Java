@@ -92,7 +92,6 @@ public class ParseNode {
     }
   }
 
-
   //Returns an rType of INT, STRING, or FLOAT. based upon the token.
   //if the token is invalid then it will return UNSET
   private rType returnType(String token) throws ParseException {
@@ -110,7 +109,7 @@ public class ParseNode {
     } else {
 
     while(i < token.length()) {
-      if ((token.charAt(i) >= '0' && token.charAt(i) <='9') || token.charAt(i) == '.'){
+      if ((token.charAt(i) >= '0' && token.charAt(i) <='9') || token.charAt(i) == '.' || token.charAt(i) == '+' || token.charAt(i) == '-'){
       if (token.charAt(i) == '.') {dot++;}
         if (dot > 1) {number = false;}
         if (dot > 0) {intnum = false;}
@@ -121,7 +120,7 @@ public class ParseNode {
       i++;
     }
 
-    if(token.charAt(0) == '\"' || token.charAt(token.length()-1) == '\"'){
+    if((token.charAt(0) == '\"' || token.charAt(token.length()-1) == '\"') && token.length() > 1 ){
       if(token.charAt(0) == '\"' && token.charAt(token.length()-1) == '\"'){
         tokenType = rType.STRING;
         this.token = token.substring(1, token.length()-1);

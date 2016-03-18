@@ -135,20 +135,16 @@ public class ParseTree {
   int countTokens(String expr) {
     int bDepth = 0;
     int j = 0;
-
-    int tindex = 0;
     boolean inToken = false;
     boolean inBracket = false;
     for (int i = 0; i < expr.length(); i++) {
      if (inToken == false && bDepth == 0) {
         if (expr.charAt(i) == '(') {
           bDepth++;
-          tindex = i;
         } else if (expr.charAt(i) != ' ') {
             if (i == expr.length()-1) // Single-character end token
               j++;
           inToken = true;
-          tindex = i;
         }
       } else if (inToken) {
         if ((expr.charAt(i) == ' ') || (i == expr.length()-1)) {
@@ -169,8 +165,8 @@ public class ParseTree {
     return j;
   }
 
-
   int checkBrackets(String expr) throws ParseException {
+
   // if good return -1 (or something), if bad, return token number of mismatch
   String expr2 = expr;
   String expr3 = expr;
