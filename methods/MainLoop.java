@@ -23,7 +23,12 @@ public class MainLoop{
     if (rt == ParseNode.rType.INT)
       System.out.println("GOT INT");
     else
-      System.out.println("didnt get INT");*/
+      System.out.println("didnt get INT");*//*
+    ParseNode.rType[] testrType = new ParseNode.rType[] {ParseNode.rType.INT, ParseNode.rType.INT};
+    Method testMethod = functions.getFuncMethod("add", testrType);
+    System.out.println(testMethod.getName());
+    for (Class<?> para : testMethod.getParameterTypes())
+      System.out.println(para);*/
 
     String expr = "(add 1 (add 3 4) )))";
     ParseTree tree = new ParseTree(new ParseNode("", "", 0, 0, ParseNode.tType.WRONGO));
