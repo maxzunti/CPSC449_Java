@@ -106,6 +106,12 @@ public class ParseNode {
     boolean number = true;
     boolean intnum = true;
     int i = 0;
+
+    // Annoying Case
+    if (expr.indexOf('(') == -1 && expr.indexOf(')') == -1 && (token.charAt(0) == '\"' || token.charAt(token.length()-1) == '\"') && !(token.charAt(0) == '\"' && token.charAt(token.length()-1) == '\"')){
+      throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
+    } else {
+
     while(i < token.length()) {
       if ((token.charAt(i) >= '0' && token.charAt(i) <='9') || token.charAt(i) == '.'){
       if (token.charAt(i) == '.') {dot++;}
@@ -138,7 +144,7 @@ public class ParseNode {
       tokenType = rType.INVALID;
       throw new ParseException("Unexpected character encountered at offset " + tokenPos + "\n" + showToken(), tokenPos);
     }
-
+}
     return tokenType;
   }
 

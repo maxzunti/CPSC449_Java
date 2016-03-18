@@ -191,7 +191,8 @@ public class ParseTree {
       leftNum++;
     }
   }
-expr = expr3;
+
+  expr = expr3;
   //find number of right brackets
   while (!(right == -1)){
     right = expr.indexOf(')');
