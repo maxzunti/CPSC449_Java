@@ -50,15 +50,44 @@ public class CommandLnInterpreter{
       System.exit(-4);
     }
     else if (validVerboseArg(commandLnArgs[0]) && commandLnArgs.length == 2 ){
-      System.err.println("No Class");
-      System.exit(0);
+      if (commandLnArgs[1].length() <= 4){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
+      if (!commandLnArgs[1].substring(commandLnArgs[1].length() - 4).equals(".jar")){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
+
+      filesFunctions = getClassFromJar(commandLnArgs[1], "Commands");
+      MainLoop.verbose = true;
     }
     else if (validVerbHelpArg(commandLnArgs[0]) && commandLnArgs.length == 2 ){
-      System.err.println("No Class");
-      System.exit(0);
+      if (commandLnArgs[1].length() <= 4){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
+      if (!commandLnArgs[1].substring(commandLnArgs[1].length() - 4).equals(".jar")){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
+      printSynopsis();
+      System.out.println ("\nThis program interprets commands of the format '(<method> {arg}*)' on the command line, finds corresponding");
+      System.out.println ("methods in <class-name>, and executes them, printing the result to sysout.");
+      filesFunctions = getClassFromJar(commandLnArgs[1], "Commands");
+      MainLoop.verbose = true;
     }
     //If there is a verbrose argument first followed by a valid jar and class name, then continue
     else if (validVerboseArg(commandLnArgs[0]) && commandLnArgs.length == 3){
+      if (commandLnArgs[1].length() <= 4){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
       if (!commandLnArgs[1].substring(commandLnArgs[1].length() - 4).equals(".jar")){
         System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
         System.err.println(getErrSynopsis());
@@ -69,6 +98,11 @@ public class CommandLnInterpreter{
     }
     //If there is a verbroseHelper argument first followed by a valid jar and class name, then continue
     else if (validVerbHelpArg(commandLnArgs[0]) && commandLnArgs.length == 3){
+      if (commandLnArgs[1].length() <= 4){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
       if (!commandLnArgs[1].substring(commandLnArgs[1].length() - 4).equals(".jar")){
         System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
         System.err.println(getErrSynopsis());
@@ -83,8 +117,9 @@ public class CommandLnInterpreter{
     //If there is a valid jar and class name, then continue
     else if (commandLnArgs.length == 2){
       if (commandLnArgs[0].length() <= 4){
-        System.out.println("bad args");
-        System.exit(0);
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
       }
       if (!commandLnArgs[0].substring(commandLnArgs[0].length() - 4).equals(".jar")){
         System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
@@ -105,16 +140,24 @@ public class CommandLnInterpreter{
       System.err.println(getErrSynopsis());
       System.exit(-1);
     }
-      //checks the number of commandLnArg is within range with no qualifiers
+    //checks the number of commandLnArg is within range with no qualifiers
     else if(commandLnArgs.length > 2){
       System.err.println("This program takes at most two command line arguments.");
       System.err.println(getErrSynopsis());
       System.exit(-2);
     }
     else if (commandLnArgs.length == 1){
-
-      System.err.println("There is only one argument and no qualifiers");
-      System.exit(0);
+      if (commandLnArgs[0].length() <= 4){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
+      if (!commandLnArgs[0].substring(commandLnArgs[0].length() - 4).equals(".jar")){
+        System.err.println("This program requires a jar file as the first command line argument (after any qualifiers).");
+        System.err.println(getErrSynopsis());
+        System.exit(-3);
+      }
+      filesFunctions = getClassFromJar(commandLnArgs[0], "Commands");
     }
     //if none of the above the print error message and quit
     else{
